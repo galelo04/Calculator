@@ -63,7 +63,7 @@ container.addEventListener('click',(e)=>{
             }
             break;
         case "operator" :
-            if(isOperator(onScreen.slice(-1))){
+            if(isOperator(onScreen.slice(-1))&&(e.target.textContent!=='-' || onScreen.slice(-1)==='-')){
                 onScreen = onScreen.slice(0,-1)+e.target.textContent;
                 expression= expression.slice(0,-1)+e.target.textContent;
             }
