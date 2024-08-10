@@ -4,6 +4,13 @@ const resultScreen = document.querySelector(".resultScreen");
 let isFirstOperator = true;
 let onScreen = "";
 let expression = "";
+let operator ='';
+let firstNumber = "";
+let firstNumberFinished = false;
+let secondNumber = "";
+let dotFirst = false;
+let dotSecond = false;
+
 
 function add (num1 , num2){
     return num1+num2;
@@ -20,20 +27,7 @@ function division(num1,num2){
 function isOperator(character){
     return (character==='+' || character==='-' || character==='*' || character==='/');
 }
-function operation(str){
-    const arr = str.split("");
-    let num1 = "" , num2 = "" ,operator;
-    let num1Finished = false;
-    for(let i = 0 ; i < arr.length ;i++){
-        if(isOperator(arr[i]) && i!==0){
-            operator=arr[i];
-            num1Finished = true;
-        }
-        else if(num1Finished)
-            num2+=arr[i];
-        else
-            num1+=arr[i];
-    }
+function operation(num1 , num2 , operator){
     switch(operator){
         case '+':
             return add(+num1,+num2);
@@ -43,29 +37,30 @@ function operation(str){
             return multiply(+num1,+num2);
         case '/':
             return division(+num1,+num2);
-        default :
-            if(num1.length===0)
-                return "ERROR"
-            else
-                return num1;
     }
 }
 
 container.addEventListener('click',(e)=>{
     switch(e.target.className){
         case "digit" :
-            if(expression.slice(-1)==='='){
-                onScreen=expression=e.target.textContent;
+            if(!firstNumberFinished){
+                if(e.target.id==="butDot" && dotFirst) break;
+                else if(e.target && !dotFirst)
+                    dotFirst=true;
+                onScreen+=e.target.textContent;
+                firstNumber+=e.target.textContent;
             }
             else{
+                if(e.target.id==="butDot" && dotSecond)break;
+                else if(e.target.id==="butDot" && !dotSecond)
+                    dotSecond=true;
                 onScreen+=e.target.textContent;
-                expression+=e.target.textContent;
+                secondNumber+=e.target.textContent;
             }
             break;
         case "operator" :
-            if(isOperator(onScreen.slice(-1))){
+            if(isOperator(onScreen.slice(-1))&&(e.target.textContent!=='-' || onScreen.slice(-1)==='-')){
                 onScreen = onScreen.slice(0,-1)+e.target.textContent;
-                expression= expression.slice(0,-1)+e.target.textContent;
             }
             else if(isFirstOperator){
                 isFirstOperator = false;
